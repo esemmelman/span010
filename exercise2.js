@@ -9,6 +9,20 @@ const sentenceArea = document.querySelector('#sentences');
 const score = document.querySelector('#score');
 const checkButton = document.querySelector('#check');
 const nextButton = document.querySelector('#next');
+const displayInfo = document.querySelector('#display-info');
+
+function updateDisplay() {
+  const viewport = window.visualViewport;
+  const width = Math.round(viewport?.width ?? window.innerWidth);
+  const height = Math.round(viewport?.height ?? window.innerHeight);
+  const pixelRatio = window.devicePixelRatio || 1;
+  document.documentElement.dataset.display = height < 480 ? 'tight' : height < 700 ? 'compact' : 'standard';
+  displayInfo.textContent = ` · Screen ${screen.width}×${screen.height} · Viewport ${width}×${height} · Pixel ratio ${pixelRatio.toFixed(2)}×`;
+}
+
+updateDisplay();
+window.addEventListener('resize', updateDisplay);
+window.visualViewport?.addEventListener('resize', updateDisplay);
 
 function renderQuestion() {
   selectedWords = [null, null, null, null];
