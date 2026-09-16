@@ -1,10 +1,4 @@
-const sentences = [
-  { english: 'I give her a book.', words: ['Yo', 'le', 'doy', 'un libro'] },
-  { english: 'You send me a photo.', words: ['Tú', 'me', 'mandas', 'una foto'] },
-  { english: 'She tells us a story.', words: ['Ella', 'nos', 'cuenta', 'una historia'] },
-  { english: 'We bring you a coffee.', words: ['Nosotros', 'te', 'traemos', 'un café'] },
-  { english: 'They show them the picture.', words: ['Ellos', 'les', 'muestran', 'la foto'] }
-];
+let sentences = [];
 const columns = ['subject', 'indirect', 'verb', 'object'];
 const bank = document.querySelector('.word-bank');
 const sentenceArea = document.querySelector('#sentences');
@@ -44,7 +38,8 @@ function place(word, slot) {
   clearFeedback();
 }
 
-function render() {
+function render(refresh = false) {
+  sentences = SpanishSentences.get('exercise2', refresh);
   selected = null;
   score.textContent = '';
   sentenceArea.replaceChildren();
@@ -129,5 +124,5 @@ document.querySelector('#check').addEventListener('click', () => {
   score.textContent = `Score: ${correct} out of ${sentences.length}`;
 });
 
-document.querySelector('#reset').addEventListener('click', render);
+document.querySelector('#reset').addEventListener('click', () => render(true));
 render();
