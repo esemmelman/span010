@@ -21,4 +21,10 @@ aside strong{font-size:34px}
 aside p{font-size:22px}
 footer .wrap{min-height:105px;font-size:20px}
 @media(max-width:650px){header{min-height:85px}.brand{font-size:28px}.sentence-card{grid-template-columns:1fr;gap:4px;padding:25px}.number{font-size:29px}h2{font-size:clamp(37px,9vw,50px)}.translation{font-size:24px}.words span{min-height:82px}.words b{font-size:23px}.words small,.words .indirect small{font-size:17px}aside{padding:26px}aside strong{font-size:30px}aside p{font-size:20px}footer .wrap{font-size:17px;gap:15px}}
+/* Translation and annotations match the Spanish sentence's type size. */
+.translation,.words b,.words small,.words .indirect small{font-size:clamp(42px,5vw,58px);line-height:1.25}
+.words{display:grid;grid-template-columns:1fr;gap:14px}
+.words span{min-height:0;padding:20px 24px}
+.words small{overflow-wrap:anywhere}
+@media(max-width:650px){.translation,.words b,.words small,.words .indirect small{font-size:clamp(37px,9vw,50px)}.words span{min-height:0;padding:18px}}
 
