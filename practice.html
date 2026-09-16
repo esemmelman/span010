@@ -13,14 +13,8 @@
 <body>
   <main>
     <form id="practice-form">
-      <section class="sentence-list" aria-label="Indirect object pronoun practice">
-        <article><label for="answer-1" lang="es">Carlos <input id="answer-1" name="answer-1" autocomplete="off" autocapitalize="none" aria-label="Missing pronoun in sentence one"> compra flores a su esposa.</label><p>Carlos buys flowers for his wife.</p><output class="feedback" id="feedback-1"></output></article>
-        <article><label for="answer-2" lang="es">¿<input id="answer-2" name="answer-2" autocomplete="off" autocapitalize="none" aria-label="Missing pronoun in sentence two"> puedes prestar tu lápiz a mí?</label><p>Can you lend me your pencil?</p><output class="feedback" id="feedback-2"></output></article>
-        <article><label for="answer-3" lang="es">La abuela <input id="answer-3" name="answer-3" autocomplete="off" autocapitalize="none" aria-label="Missing pronoun in sentence three"> cuenta un cuento a los niños.</label><p>Grandmother tells the children a story.</p><output class="feedback" id="feedback-3"></output></article>
-        <article><label for="answer-4" lang="es">Yo <input id="answer-4" name="answer-4" autocomplete="off" autocapitalize="none" aria-label="Missing pronoun in sentence four"> preparo el desayuno a ti.</label><p>I prepare breakfast for you.</p><output class="feedback" id="feedback-4"></output></article>
-        <article><label for="answer-5" lang="es">El médico <input id="answer-5" name="answer-5" autocomplete="off" autocapitalize="none" aria-label="Missing pronoun in sentence five"> da consejos a nosotros.</label><p>The doctor gives us advice.</p><output class="feedback" id="feedback-5"></output></article>
-      </section>
-      <div class="practice-actions"><button class="action-button" type="submit">Score It</button><button class="action-button secondary" type="reset">Try Again</button><a class="action-button secondary" href="index.html">Back</a></div>
+      <section class="sentence-list" id="questions" aria-label="Indirect object pronoun practice"></section>
+      <div class="practice-actions"><button class="action-button" type="submit">Score It</button><button class="action-button secondary" id="new-set" type="button">Try Again</button><a class="action-button secondary" href="index.html">Back</a></div>
       <output id="score" aria-live="polite"></output>
     </form>
   </main>
