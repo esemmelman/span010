@@ -1,5 +1,5 @@
 const reference = document.querySelector('.sentence-list');
-SpanishSentences.get('reference').forEach(sentence => {
+SpanishSentences.get('reference', true).forEach(sentence => {
   const article = document.createElement('article');
   const heading = document.createElement('h1');
   heading.lang = 'es';

@@ -73,7 +73,7 @@ checkButton.addEventListener('click', () => {
   });
   const feedback = sentenceArea.querySelector('.feedback');
   feedback.className = `feedback ${right ? 'correct' : 'incorrect'}`;
-  feedback.textContent = right ? 'Correct.' : `Correct sentence: ${answer.join(' ')}.`;
+  feedback.textContent = right ? 'Correct.' : `Incorrect\n${answer.join(' ')}.`;
   if (right) correctCount++;
   checkButton.hidden = true;
   nextButton.hidden = false;
@@ -95,4 +95,4 @@ nextButton.addEventListener('click', () => {
 });
 
 document.querySelector('#reset').addEventListener('click', () => start(true));
-start();
+start(true);
