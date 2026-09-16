@@ -20,6 +20,7 @@ const questionBank = [
   { before: 'Mañana ', after: ' devuelvo las llaves a ti.', translation: 'Tomorrow I return the keys to you.', answer: 'te' },
   { before: 'El director ', after: ' ofrece un trabajo a mí.', translation: 'The director offers me a job.', answer: 'me' }
 ];
+const pronounOptions = ['me', 'te', 'le', 'nos', 'os', 'les'];
 
 const form = document.querySelector('#practice-form');
 const questionsElement = document.querySelector('#questions');
@@ -58,13 +59,22 @@ function renderNewSet() {
     label.lang = 'es';
     label.htmlFor = `answer-${index + 1}`;
     label.append(document.createTextNode(question.before));
-    const input = document.createElement('input');
-    input.id = `answer-${index + 1}`;
-    input.name = input.id;
-    input.autocomplete = 'off';
-    input.autocapitalize = 'none';
-    input.setAttribute('aria-label', `Missing indirect object pronoun in sentence ${index + 1}`);
-    label.append(input, document.createTextNode(question.after));
+    const select = document.createElement('select');
+    select.id = `answer-${index + 1}`;
+    select.name = select.id;
+    select.setAttribute('aria-label', `Choose the missing indirect object pronoun in sentence ${index + 1}`);
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = '___';
+    placeholder.selected = true;
+    select.append(placeholder);
+    shuffled(pronounOptions).forEach(pronoun => {
+      const option = document.createElement('option');
+      option.value = pronoun;
+      option.textContent = pronoun;
+      select.append(option);
+    });
+    label.append(select, document.createTextNode(question.after));
     const translation = document.createElement('p');
     translation.textContent = question.translation;
     const feedback = document.createElement('output');
@@ -73,7 +83,7 @@ function renderNewSet() {
     article.append(label, translation, feedback);
     questionsElement.append(article);
   });
-  questionsElement.querySelector('input').focus();
+  questionsElement.querySelector('select').focus();
 }
 
 form.addEventListener('submit', event => {
@@ -82,7 +92,7 @@ form.addEventListener('submit', event => {
   currentQuestions.forEach((question, index) => {
     const input = document.querySelector(`#answer-${index + 1}`);
     const feedback = document.querySelector(`#feedback-${index + 1}`);
-    const isCorrect = input.value.trim().toLocaleLowerCase('es') === question.answer;
+    const isCorrect = input.value === question.answer;
     input.className = isCorrect ? 'correct' : 'incorrect';
     feedback.className = `feedback ${isCorrect ? 'correct' : 'incorrect'}`;
     feedback.textContent = isCorrect ? 'Correct.' : `Correct answer: ${question.answer}`;
