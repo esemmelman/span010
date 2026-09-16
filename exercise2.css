@@ -6,6 +6,7 @@ main{min-height:100dvh;display:flex;flex-direction:column;padding:12px 20px}
 .feedback{display:block;min-height:1.4em;margin-top:6px;font-family:"DM Sans",Arial,sans-serif;font-size:clamp(28px,3.8vw,48px);font-weight:700;line-height:1.1;white-space:pre-line}
 .feedback.correct{color:#17603a}
 .feedback.incorrect{color:#922219}
+.feedback.prompt{font-size:clamp(18px,2vw,24px)}
 .word-bank{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;flex:1;min-height:340px;margin:14px 0}
 .word-column{display:flex;flex-direction:column;min-width:0;padding:10px;border:2px solid var(--green);border-radius:10px}
 .word-column h2{min-height:2.2em;margin:0 0 8px;font-size:clamp(18px,2vw,26px);line-height:1.1;text-align:center}

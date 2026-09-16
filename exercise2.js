@@ -36,6 +36,8 @@ function renderQuestion() {
       button.setAttribute('aria-pressed', 'false');
       button.addEventListener('click', () => {
         if (checkButton.hidden) return;
+        feedback.textContent = '';
+        feedback.className = 'feedback';
         const previous = selectedWords[columnIndex];
         if (previous) {
           previous.classList.remove('selected');
@@ -61,6 +63,12 @@ function start(refresh = false) {
 }
 
 checkButton.addEventListener('click', () => {
+  if (selectedWords.some(button => !button)) {
+    const feedback = sentenceArea.querySelector('.feedback');
+    feedback.className = 'feedback prompt';
+    feedback.textContent = 'Select one word in each column before scoring.';
+    return;
+  }
   const answer = sentences[currentIndex].words;
   const right = selectedWords.every((button, index) => button?.textContent === answer[index]);
   const heading = sentenceArea.querySelector('h2');
