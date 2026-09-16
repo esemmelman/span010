@@ -65,7 +65,7 @@ function renderNewSet() {
     select.setAttribute('aria-label', `Choose the missing indirect object pronoun in sentence ${index + 1}`);
     const placeholder = document.createElement('option');
     placeholder.value = '';
-    placeholder.textContent = '_____';
+    placeholder.textContent = ' ';
     placeholder.selected = true;
     select.append(placeholder);
     shuffled(pronounOptions).forEach(pronoun => {
