@@ -122,19 +122,19 @@ function start(refresh = false) {
 
 checkButton.addEventListener('click', () => {
   const slots = [...sentenceArea.querySelectorAll('.slot')];
-  if (slots.some(slot => !slot.dataset.wordId)) {
-    score.textContent = 'Fill all four spaces first.';
-    return;
-  }
   const answer = sentences[currentIndex].words;
   const right = slots.every((slot, column) => slot.textContent === answer[column]);
+  sentenceArea.querySelector('h2').classList.add(right ? 'correct' : 'incorrect');
   slots.forEach((slot, column) => {
-    slot.classList.toggle('correct', slot.textContent === answer[column]);
-    slot.classList.toggle('incorrect', slot.textContent !== answer[column]);
+    const wordIsCorrect = slot.textContent === answer[column];
+    slot.classList.toggle('correct', wordIsCorrect);
+    slot.classList.toggle('incorrect', !wordIsCorrect);
+    slot.textContent = answer[column];
+    slot.classList.add('filled');
   });
   const feedback = sentenceArea.querySelector('.feedback');
   feedback.className = `feedback ${right ? 'correct' : 'incorrect'}`;
-  feedback.textContent = right ? 'Correct.' : `Correct answer: ${answer.join(' ')}.`;
+  feedback.textContent = right ? 'Correct.' : 'Correct words are shown in the rectangles.';
   if (right) correctCount++;
   checkButton.disabled = true;
   checkButton.hidden = true;
