@@ -7,11 +7,11 @@ main{min-height:100dvh;display:flex;flex-direction:column;padding:12px 20px}
 .word{width:100%;height:100%;min-height:0;padding:2px 4px;font-size:clamp(28px,3.8vw,48px);line-height:1.05;overflow-wrap:anywhere}
 .word:hover,.word:focus-visible,.word.selected,.slot:hover,.slot:focus-visible{background:#dbe8d9}
 .word.selected{outline:4px solid #a45b00;outline-offset:0}
-.word.used{visibility:hidden}
+.word.used{background:#dbe8d9}
 .exercise-sentences article{padding:0;border:0}
 .exercise-sentences h2{margin:0 0 8px;font-family:Fraunces,Georgia,serif;font-size:clamp(27px,3.5vw,40px);line-height:1.15}
 .slots{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-.slot{width:100%;min-height:64px;padding:4px;font-size:clamp(18px,2.4vw,29px);overflow-wrap:anywhere;border-style:dashed}
+.slot{width:100%;min-height:64px;padding:4px;font-size:clamp(28px,3.8vw,48px);line-height:1.05;overflow-wrap:anywhere;border-style:dashed}
 .slot.filled{border-style:solid}
 .slot.correct{border-color:#17603a;background:#e1f1e5}
 .slot.incorrect{border-color:#922219;background:#fff0ec}
@@ -23,4 +23,4 @@ main{min-height:100dvh;display:flex;flex-direction:column;padding:12px 20px}
 #score{display:block;min-height:1.4em;margin-top:5px;font-size:clamp(20px,2.4vw,28px)}
 .version{margin-top:auto;font-size:16px;text-align:right}
 [hidden]{display:none!important}
-@media(max-width:650px){main{padding:8px}.word-bank{gap:4px;min-height:300px;margin-bottom:8px}.word-column{padding:4px}.word-column h2{min-height:3.3em;margin-bottom:3px;font-size:clamp(12px,3.2vw,18px)}.word-list{gap:4px}.word{font-size:clamp(18px,4.8vw,27px);padding:1px;line-height:1}.slots{gap:4px}.slot{min-height:54px;font-size:clamp(13px,3.6vw,20px)}.practice-actions .action-button{font-size:18px;padding:6px 9px}.version{font-size:13px}}
+@media(max-width:650px){main{padding:8px}.word-bank{gap:4px;min-height:300px;margin-bottom:8px}.word-column{padding:4px}.word-column h2{min-height:3.3em;margin-bottom:3px;font-size:clamp(12px,3.2vw,18px)}.word-list{gap:4px}.word{font-size:clamp(18px,4.8vw,27px);padding:1px;line-height:1}.slots{gap:4px}.slot{min-height:54px;font-size:clamp(18px,4.8vw,27px)}.practice-actions .action-button{font-size:18px;padding:6px 9px}.version{font-size:13px}}
