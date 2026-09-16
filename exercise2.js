@@ -1,28 +1,26 @@
 let sentences = [];
+let currentIndex = 0;
+let correctCount = 0;
+let selected = null;
+
 const columns = ['subject', 'indirect', 'verb', 'object'];
+const labels = ['Pronoun', 'Indirect pronoun', 'Verb', 'Object'];
 const bank = document.querySelector('.word-bank');
 const sentenceArea = document.querySelector('#sentences');
 const score = document.querySelector('#score');
-let selected = null;
-
-function shuffled(items) {
-  const copy = [...items];
-  for (let i = copy.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
-  }
-  return copy;
-}
+const checkButton = document.querySelector('#check');
+const nextButton = document.querySelector('#next');
 
 function clearFeedback() {
+  if (checkButton.disabled) return;
   score.textContent = '';
-  document.querySelectorAll('.feedback').forEach(item => item.textContent = '');
-  document.querySelectorAll('.slot').forEach(item => item.classList.remove('correct', 'incorrect'));
+  sentenceArea.querySelector('.feedback').textContent = '';
+  sentenceArea.querySelectorAll('.slot').forEach(slot => slot.classList.remove('correct', 'incorrect'));
 }
 
 function place(word, slot) {
-  if (!word || !slot || word.dataset.column !== slot.dataset.column) return;
-  const oldSlot = document.querySelector(`.slot[data-word-id="${word.id}"]`);
+  if (!word || !slot || checkButton.disabled || word.dataset.column !== slot.dataset.column) return;
+  const oldSlot = sentenceArea.querySelector(`.slot[data-word-id="${word.id}"]`);
   if (oldSlot) {
     oldSlot.textContent = oldSlot.dataset.label;
     oldSlot.dataset.wordId = '';
@@ -38,15 +36,18 @@ function place(word, slot) {
   clearFeedback();
 }
 
-function render(refresh = false) {
-  sentences = SpanishSentences.get('exercise2', refresh);
+function renderQuestion() {
   selected = null;
+  checkButton.disabled = false;
+  checkButton.hidden = false;
+  nextButton.hidden = true;
   score.textContent = '';
   sentenceArea.replaceChildren();
+
   columns.forEach((column, columnIndex) => {
     const list = bank.querySelector(`[data-column="${column}"] .word-list`);
     list.replaceChildren();
-    shuffled(sentences.map((sentence, index) => ({ text: sentence.words[columnIndex], index }))).forEach(({ text, index }) => {
+    SpanishSentences.shuffle(sentences.map((sentence, index) => ({ text: sentence.words[columnIndex], index }))).forEach(({ text, index }) => {
       const button = document.createElement('button');
       button.type = 'button';
       button.className = 'word';
@@ -55,74 +56,106 @@ function render(refresh = false) {
       button.draggable = true;
       button.textContent = text;
       button.addEventListener('click', () => {
+        if (checkButton.disabled) return;
         if (selected) selected.classList.remove('selected');
         selected = selected === button ? null : button;
         if (selected) selected.classList.add('selected');
       });
       button.addEventListener('dragstart', event => {
+        if (checkButton.disabled) { event.preventDefault(); return; }
         event.dataTransfer.setData('text/plain', button.id);
         event.dataTransfer.effectAllowed = 'move';
       });
       list.append(button);
     });
   });
-  sentences.forEach((sentence, index) => {
-    const article = document.createElement('article');
-    const heading = document.createElement('h2');
-    heading.textContent = `${index + 1}. ${sentence.english}`;
-    const slots = document.createElement('div');
-    slots.className = 'slots';
-    columns.forEach((column, columnIndex) => {
-      const slot = document.createElement('button');
-      slot.type = 'button';
-      slot.className = 'slot';
-      slot.dataset.column = column;
-      slot.dataset.label = ['Pronoun', 'Indirect pronoun', 'Verb', 'Object'][columnIndex];
-      slot.dataset.wordId = '';
-      slot.textContent = slot.dataset.label;
-      slot.setAttribute('aria-label', `Sentence ${index + 1}: ${slot.dataset.label}`);
-      slot.addEventListener('click', () => {
-        if (selected) place(selected, slot);
-        else if (slot.dataset.wordId) {
-          document.getElementById(slot.dataset.wordId).classList.remove('used');
-          slot.dataset.wordId = '';
-          slot.textContent = slot.dataset.label;
-          slot.classList.remove('filled');
-          clearFeedback();
-        }
-      });
-      slot.addEventListener('dragover', event => {
-        if (event.dataTransfer.types.includes('text/plain')) event.preventDefault();
-      });
-      slot.addEventListener('drop', event => {
-        event.preventDefault();
-        place(document.getElementById(event.dataTransfer.getData('text/plain')), slot);
-      });
-      slots.append(slot);
+
+  const article = document.createElement('article');
+  const heading = document.createElement('h2');
+  heading.tabIndex = -1;
+  heading.textContent = sentences[currentIndex].english;
+  const slots = document.createElement('div');
+  slots.className = 'slots';
+  columns.forEach((column, columnIndex) => {
+    const slot = document.createElement('button');
+    slot.type = 'button';
+    slot.className = 'slot';
+    slot.dataset.column = column;
+    slot.dataset.label = labels[columnIndex];
+    slot.dataset.wordId = '';
+    slot.textContent = slot.dataset.label;
+    slot.setAttribute('aria-label', `${labels[columnIndex]} for ${sentences[currentIndex].english}`);
+    slot.addEventListener('click', () => {
+      if (checkButton.disabled) return;
+      if (selected) place(selected, slot);
+      else if (slot.dataset.wordId) {
+        document.getElementById(slot.dataset.wordId).classList.remove('used');
+        slot.dataset.wordId = '';
+        slot.textContent = slot.dataset.label;
+        slot.classList.remove('filled');
+        clearFeedback();
+      }
     });
-    const feedback = document.createElement('output');
-    feedback.className = 'feedback';
-    article.append(heading, slots, feedback);
-    sentenceArea.append(article);
+    slot.addEventListener('dragover', event => {
+      if (!checkButton.disabled && event.dataTransfer.types.includes('text/plain')) event.preventDefault();
+    });
+    slot.addEventListener('drop', event => {
+      event.preventDefault();
+      place(document.getElementById(event.dataTransfer.getData('text/plain')), slot);
+    });
+    slots.append(slot);
   });
+  const feedback = document.createElement('output');
+  feedback.className = 'feedback';
+  feedback.setAttribute('aria-live', 'polite');
+  article.append(heading, slots, feedback);
+  sentenceArea.append(article);
 }
 
-document.querySelector('#check').addEventListener('click', () => {
-  let correct = 0;
-  [...sentenceArea.children].forEach((article, index) => {
-    const slots = [...article.querySelectorAll('.slot')];
-    const right = slots.every((slot, column) => slot.textContent === sentences[index].words[column] && slot.dataset.wordId);
-    slots.forEach((slot, column) => {
-      slot.classList.toggle('correct', slot.textContent === sentences[index].words[column] && !!slot.dataset.wordId);
-      slot.classList.toggle('incorrect', slot.textContent !== sentences[index].words[column] || !slot.dataset.wordId);
-    });
-    const feedback = article.querySelector('.feedback');
-    feedback.className = `feedback ${right ? 'correct' : 'incorrect'}`;
-    feedback.textContent = right ? 'Correct.' : `Correct answer: ${sentences[index].words.join(' ')}.`;
-    if (right) correct++;
+function start(refresh = false) {
+  sentences = SpanishSentences.get('exercise2', refresh);
+  currentIndex = 0;
+  correctCount = 0;
+  bank.hidden = false;
+  renderQuestion();
+}
+
+checkButton.addEventListener('click', () => {
+  const slots = [...sentenceArea.querySelectorAll('.slot')];
+  if (slots.some(slot => !slot.dataset.wordId)) {
+    score.textContent = 'Fill all four spaces first.';
+    return;
+  }
+  const answer = sentences[currentIndex].words;
+  const right = slots.every((slot, column) => slot.textContent === answer[column]);
+  slots.forEach((slot, column) => {
+    slot.classList.toggle('correct', slot.textContent === answer[column]);
+    slot.classList.toggle('incorrect', slot.textContent !== answer[column]);
   });
-  score.textContent = `Score: ${correct} out of ${sentences.length}`;
+  const feedback = sentenceArea.querySelector('.feedback');
+  feedback.className = `feedback ${right ? 'correct' : 'incorrect'}`;
+  feedback.textContent = right ? 'Correct.' : `Correct answer: ${answer.join(' ')}.`;
+  if (right) correctCount++;
+  checkButton.disabled = true;
+  checkButton.hidden = true;
+  nextButton.hidden = false;
+  nextButton.textContent = currentIndex === sentences.length - 1 ? 'See Score' : 'Next Sentence';
+  score.textContent = `Score: ${correctCount} out of ${currentIndex + 1}`;
 });
 
-document.querySelector('#reset').addEventListener('click', () => render(true));
-render();
+nextButton.addEventListener('click', () => {
+  currentIndex++;
+  if (currentIndex < sentences.length) {
+    renderQuestion();
+    sentenceArea.querySelector('h2').focus();
+  } else {
+    bank.hidden = true;
+    sentenceArea.replaceChildren();
+    checkButton.hidden = true;
+    nextButton.hidden = true;
+    score.textContent = `Final score: ${correctCount} out of ${sentences.length}`;
+  }
+});
+
+document.querySelector('#reset').addEventListener('click', () => start(true));
+start();
