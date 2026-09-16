@@ -27,4 +27,9 @@ footer .wrap{min-height:105px;font-size:20px}
 .words span{min-height:0;padding:20px 24px}
 .words small{overflow-wrap:anywhere}
 @media(max-width:650px){.translation,.words b,.words small,.words .indirect small{font-size:clamp(37px,9vw,50px)}.words span{min-height:0;padding:18px}}
+/* Bold green text across the guide. */
+body{color:var(--green);font-weight:700}
+.brand,.number,h2,.translation,.words b,.words small,.words .indirect small,header small,aside strong,aside p,footer .wrap,footer a{color:var(--green);font-weight:700}
+mark{color:var(--green);font-weight:700;background:#c9e5cc}
+aside{background:var(--mint);border:1px solid #b9d7bd}
 
